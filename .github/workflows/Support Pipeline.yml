@@ -24,6 +24,13 @@ jobs:
           go install github.com/relaxnow/vcgopkg@latest
           vcgopkg
           ls
+      - name: Find ZIP file
+        run: |
+            zip_file=$(find /caminho/do/diretório -type f -name "*.zip" | head -n 1)
+            echo "ZIP file found at: $zip_file"
+            echo "##[set-output name=zip_path;]$zip_file"
+        id: find_zip
+
       - name: UploadAndScan
         uses: veracode/veracode-uploadandscan-action@master # Faz a analise da Veracode
         env:
@@ -36,5 +43,5 @@ jobs:
           criticality: 'VeryHigh'
           appname: '$AppName'
           createsandbox: true
-          filepath: '/home/runner/work/govwa/govwa/veracode/*.zip'
+          filepath: ${{ steps.find_zip.outputs.zip_path }}
           version: ${{ github.run_id }}
