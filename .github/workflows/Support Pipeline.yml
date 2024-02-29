@@ -36,6 +36,5 @@ jobs:
           criticality: 'VeryHigh'
           appname: '$AppName'
           createsandbox: true
-          filepath: '*.zip'
-          deleteIncompleteScan: false
+          filepath: '/home/runner/work/govwa/govwa/veracode/*.zip'
           version: ${{ github.run_id }}
