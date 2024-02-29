@@ -24,9 +24,18 @@ jobs:
           go install github.com/relaxnow/vcgopkg@latest
           vcgopkg
           ls
-      - name: Pipeline Scan
-        run: |
-          curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-          unzip -o pipeline-scan-LATEST.zip
-          ls
-          java -jar pipeline-scan.jar -vid ${{ secrets.VeracodeID }} -vkey ${{ secrets.VeracodeKey }} --json_output_file="results.json" -f /home/runner/work/govwa/govwa/veracode/govwa_app_$(date +'%Y%m%d%H%M%S').zip || true
+      - name: UploadAndScan
+        uses: veracode/veracode-uploadandscan-action@master # Faz a analise da Veracode
+        env:
+          VeracodeID: ${{ secrets.VeracodeID }} # Lembrar de criar as credenciais no Secrets
+          VeracodeKey: ${{ secrets.VeracodeKey }}
+          AppName: Github Actions - ${{ github.repository }}
+        with:
+          vid: '$VeracodeID'
+          vkey: '$VeracodeKey'
+          criticality: 'VeryHigh'
+          appname: '$AppName'
+          createsandbox: true
+          filepath: '*.zip'
+          deleteIncompleteScan: false
+          version: ${{ github.run_id }}
