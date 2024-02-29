@@ -26,7 +26,7 @@ jobs:
           ls
       - name: Find ZIP file
         run: |
-            zip_file=$(find /caminho/do/diretório -type f -name "*.zip" | head -n 1)
+            zip_file=$(find /home/runner/work/govwa/govwa/veracode -type f -name "*.zip" | head -n 1)
             echo "ZIP file found at: $zip_file"
             echo "##[set-output name=zip_path;]$zip_file"
         id: find_zip
