@@ -1,4 +1,4 @@
-name: Veracode_Go
+name: Veracode_Expert
 on:
   workflow_dispatch:
 
@@ -26,6 +26,11 @@ jobs:
             echo "ZIP file found at: $zip_file"
             echo "##[set-output name=zip_path;]$zip_file"
         id: find_zip
+      - name: Publicando Artefato
+        uses: actions/upload-artifact@v2
+        with:
+          name: pacoteVeracode
+          path: ./veracode
   
   Veracode_SCA:
     runs-on: ubuntu-latest
