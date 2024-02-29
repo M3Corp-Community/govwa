@@ -1,4 +1,4 @@
-name: Veracode_Expert
+name: Veracode_Go
 on:
   workflow_dispatch:
 
@@ -31,7 +31,7 @@ jobs:
         env:
           VeracodeID: ${{ secrets.VeracodeID }}
           VeracodeKey: ${{ secrets.VeracodeKey }}
-          AppName: Github Actions - ${{ github.repository }}
+          AppName: ${{ github.repository }}
         with:
           vid: '$VeracodeID'
           vkey: '$VeracodeKey'
@@ -41,12 +41,3 @@ jobs:
           filepath: ${{ steps.find_zip.outputs.zip_path }}
           deleteIncompleteScan: false
           version: ${{ github.run_id }}
-      - name: Veracode Pipeline Scan
-        env:
-          VID: ${{ secrets.VeracodeID }}
-          VKEY: ${{ secrets.VeracodeKey }}
-          CaminhoArquivo: ${{ steps.find_zip.outputs.zip_path }}
-        run: |
-          curl -sSfO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-          unzip -o pipeline-scan-LATEST.zip
-          java -jar pipeline-scan.jar -vid $VID -vkey $VKEY -f $CaminhoArquivo --issue_details true 
