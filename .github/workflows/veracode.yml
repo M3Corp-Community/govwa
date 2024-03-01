@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -32,17 +31,22 @@ jobs:
           name: pacoteVeracode
           path: veracode.zip
 
-  Veracode_IaC:
+  Veracode_SCA:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Veracode IaC
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+      - name: Create Vendor Folder
+        run: go mod vendor
+        
+      - name: Veracode SCA
         env:
-          VERACODE_API_KEY_ID: ${{ secrets.VeracodeID }} # Lembrar de criar as credenciais no Secrets
-          VERACODE_API_KEY_SECRET: ${{ secrets.VeracodeKey }}
+          SRCCLR_API_TOKEN: ${{ secrets.SCA }} # Lembrar de criar as credenciais no Secrets
         run: |
-          curl -fsS https://tools.veracode.com/veracode-cli/install | sh
-          ./veracode scan --source ${{ secrets.ContainerImage }} --type image --format table
+          curl -sSL 'https://download.sourceclear.com/ci.sh' | bash -s – scan --update-advisor --allow-dirty
 
   Veracode_UploadAndScan:
     runs-on: ubuntu-latest
